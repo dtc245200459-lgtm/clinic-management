@@ -1,0 +1,18 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Đăng nhập{% endblock %}
+{% block content %}
+  <div class="page-heading"><div><p class="eyebrow">BƯỚC 5 · PHÂN QUYỀN</p><h1>Đăng nhập hệ thống</h1></div></div>
+  <section class="panel form-panel login-panel">
+    <p class="hint">Sử dụng tài khoản được quản trị viên tạo trong Django Admin.</p>
+    {% if form.errors %}<div class="error-block">Tên đăng nhập hoặc mật khẩu không đúng, hoặc tài khoản đã bị vô hiệu hóa.</div>{% endif %}
+    <form method="post">{% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+      <div class="form-row"><label for="{{ form.username.id_for_label }}">Tên đăng nhập</label>
+        {{ form.username }}</div>
+      <div class="form-row login-password"><label for="{{ form.password.id_for_label }}">Mật khẩu</label>
+        {{ form.password }}</div>
+      <div class="form-actions"><button type="submit">Đăng nhập</button>
+        <a class="button-alt" href="{% url 'home' %}">Trang chủ</a></div>
+    </form>
+  </section>
+{% endblock %}

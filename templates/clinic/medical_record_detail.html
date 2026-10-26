@@ -1,0 +1,24 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Hồ sơ khám #{{ record.pk }}{% endblock %}
+{% block content %}
+  <div class="page-heading">
+    <div><p class="eyebrow">HỒ SƠ KHÁM · BƯỚC 4</p><h1>Hồ sơ HS{{ record.pk|stringformat:'04d' }}</h1></div>
+    <a class="button" href="{% url 'medical_record_update' record.pk %}">Sửa hồ sơ</a>
+  </div>
+  <section class="panel">
+    <dl class="detail-grid">
+      <div><dt>Bệnh nhân</dt><dd>{{ record.appointment.patient.patient_code }} · {{ record.appointment.patient.full_name }}</dd></div>
+      <div><dt>Bác sĩ</dt><dd>{{ record.appointment.doctor.full_name }}</dd></div>
+      <div><dt>Lịch hẹn</dt><dd>{{ record.appointment.scheduled_at|date:'d/m/Y H:i' }}</dd></div>
+      <div><dt>Thời điểm khám</dt><dd>{{ record.examined_at|date:'d/m/Y H:i' }}</dd></div>
+      <div class="detail-wide"><dt>Triệu chứng ghi nhận</dt><dd>{{ record.symptoms|linebreaksbr }}</dd></div>
+      <div class="detail-wide"><dt>Chẩn đoán</dt><dd>{{ record.diagnosis|linebreaksbr }}</dd></div>
+      <div class="detail-wide"><dt>Hướng xử trí</dt><dd>{{ record.treatment_plan|default:'Chưa nhập'|linebreaksbr }}</dd></div>
+    </dl>
+    <div class="form-actions">
+      {% if prescription %}<a class="button" href="{% url 'prescription_detail' prescription.pk %}">Xem đơn thuốc</a>
+      {% else %}<a class="button" href="{% url 'prescription_create' record.pk %}">+ Tạo đơn thuốc</a>{% endif %}
+      <a class="button-alt" href="{% url 'medical_record_list' %}">Danh sách hồ sơ</a>
+    </div>
+  </section>
+{% endblock %}

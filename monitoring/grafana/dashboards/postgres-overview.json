@@ -1,0 +1,69 @@
+{
+  "annotations": {"list": []},
+  "editable": false,
+  "graphTooltip": 1,
+  "id": null,
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "PostgreSQL (1 = Hoạt động)",
+      "description": "pg_up = 1 nếu exporter kết nối thành công đến PostgreSQL.",
+      "datasource": {"type": "prometheus", "uid": "clinic_prometheus"},
+      "targets": [{"expr": "pg_up{job=\"postgres\"}", "legendFormat": "PostgreSQL", "refId": "A"}],
+      "gridPos": {"h": 7, "w": 8, "x": 0, "y": 0},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [{"type": "value", "options": {"0": {"text": "LỖI", "color": "red"}, "1": {"text": "HOẠT ĐỘNG", "color": "green"}}}],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]}
+        },
+        "overrides": []
+      },
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "orientation": "auto", "textMode": "value", "colorMode": "value", "graphMode": "none", "justifyMode": "auto"}
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Kết nối đến các cơ sở dữ liệu",
+      "description": "Tổng kết nối đang mở, loại trừ các database template.",
+      "datasource": {"type": "prometheus", "uid": "clinic_prometheus"},
+      "targets": [{"expr": "sum(pg_stat_database_numbackends{job=\"postgres\",datname!~\"template.*\"})", "legendFormat": "Kết nối", "refId": "A"}],
+      "gridPos": {"h": 7, "w": 8, "x": 8, "y": 0},
+      "fieldConfig": {"defaults": {"unit": "short", "color": {"mode": "palette-classic"}}, "overrides": []},
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "orientation": "auto", "textMode": "value", "colorMode": "value", "graphMode": "area", "justifyMode": "auto"}
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Dung lượng database ứng dụng",
+      "description": "Kích thước các database ngoài template và database postgres mặc định.",
+      "datasource": {"type": "prometheus", "uid": "clinic_prometheus"},
+      "targets": [{"expr": "pg_database_size_bytes{job=\"postgres\",datname!~\"template.*|postgres\"}", "legendFormat": "{{datname}}", "refId": "A"}],
+      "gridPos": {"h": 7, "w": 8, "x": 16, "y": 0},
+      "fieldConfig": {"defaults": {"unit": "bytes", "color": {"mode": "palette-classic"}}, "overrides": []},
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "orientation": "auto", "textMode": "value_and_name", "colorMode": "value", "graphMode": "area", "justifyMode": "auto"}
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Giao dịch hoàn tất mỗi giây",
+      "description": "Tốc độ transaction commit trung bình trong 5 phút. Cần dữ liệu tích lũy sau khi khởi động.",
+      "datasource": {"type": "prometheus", "uid": "clinic_prometheus"},
+      "targets": [{"expr": "sum by (datname) (rate(pg_stat_database_xact_commit{job=\"postgres\",datname!~\"template.*\"}[5m]))", "legendFormat": "{{datname}}", "refId": "A"}],
+      "gridPos": {"h": 9, "w": 24, "x": 0, "y": 7},
+      "fieldConfig": {"defaults": {"unit": "ops", "color": {"mode": "palette-classic"}, "custom": {"drawStyle": "line", "lineInterpolation": "linear", "lineWidth": 2, "fillOpacity": 10, "showPoints": "auto", "spanNulls": false}}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "none"}}
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["clinic", "postgres", "prometheus"],
+  "templating": {"list": []},
+  "time": {"from": "now-1h", "to": "now"},
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Phòng khám — Giám sát PostgreSQL",
+  "uid": "clinic-postgres",
+  "version": 1,
+  "refresh": "15s"
+}

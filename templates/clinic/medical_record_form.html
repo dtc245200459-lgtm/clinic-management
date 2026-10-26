@@ -1,0 +1,23 @@
+{% extends 'clinic/base.html' %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+  <div class="page-heading"><div><p class="eyebrow">HỒ SƠ KHÁM · BƯỚC 4</p><h1>{{ page_title }}</h1></div></div>
+  <section class="panel form-panel">
+    <p class="hint">Chỉ dùng dữ liệu giả lập. Người nhập tự ghi triệu chứng, chẩn đoán, hướng xử trí; hệ thống không tự đưa ra quyết định y tế. Lưu hồ sơ mới sẽ đánh dấu lịch hẹn là “Đã khám”.</p>
+    <form method="post">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="error-block">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="form-grid">
+        {% for field in form %}
+          <div class="form-row {% if field.name == 'symptoms' or field.name == 'diagnosis' or field.name == 'treatment_plan' %}form-wide{% endif %}">
+            <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="required">*</span>{% endif %}</label>
+            {{ field }}
+            {% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="form-actions"><button type="submit">Lưu hồ sơ</button>
+        <a class="button-alt" href="{% url 'medical_record_list' %}">Quay lại</a></div>
+    </form>
+  </section>
+{% endblock %}

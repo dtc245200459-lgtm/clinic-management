@@ -1,0 +1,26 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Đơn thuốc #{{ prescription.pk }}{% endblock %}
+{% block content %}
+  <div class="page-heading">
+    <div><p class="eyebrow">ĐƠN THUỐC · BƯỚC 4</p><h1>Đơn thuốc #{{ prescription.pk }}</h1>
+      <p class="description">Bệnh nhân: {{ prescription.record.appointment.patient.full_name }} · Bác sĩ: {{ prescription.record.appointment.doctor.full_name }}</p></div>
+    <a class="button" href="{% url 'prescription_item_create' prescription.pk %}">+ Thêm dòng thuốc</a>
+  </div>
+  <section class="panel">
+    <p class="warning">Mọi tên thuốc, số lượng và cách dùng dưới đây chỉ do người nhập cung cấp để kiểm thử phần mềm.</p>
+    <p><strong>Ghi chú:</strong> {{ prescription.notes|default:'Chưa nhập'|linebreaksbr }}
+      <a class="inline-link" href="{% url 'prescription_update' prescription.pk %}">Sửa ghi chú</a></p>
+    <div class="table-scroll"><table class="data-table">
+      <thead><tr><th>Thuốc</th><th>Số lượng</th><th>Liều dùng ghi nhận</th><th>Tần suất</th><th>Hướng dẫn</th><th>Thao tác</th></tr></thead>
+      <tbody>
+        {% for item in items %}<tr>
+          <td><strong>{{ item.medicine.name }}</strong><div class="subtle">{{ item.medicine.unit }}</div></td>
+          <td>{{ item.quantity }}</td><td>{{ item.dosage }}</td><td>{{ item.frequency|default:'—' }}</td>
+          <td>{{ item.instructions|default:'—'|linebreaksbr }}</td>
+          <td class="actions"><a href="{% url 'prescription_item_update' prescription.pk item.pk %}">Sửa</a></td>
+        </tr>{% empty %}<tr><td colspan="6" class="empty-state">Đơn thuốc chưa có dòng thuốc nào.</td></tr>{% endfor %}
+      </tbody>
+    </table></div>
+    <div class="form-actions"><a class="button-alt" href="{% url 'medical_record_detail' prescription.record.pk %}">Về hồ sơ khám</a></div>
+  </section>
+{% endblock %}

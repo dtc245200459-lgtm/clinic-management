@@ -1,0 +1,81 @@
+{
+  "annotations": {"list": []},
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Django / Nginx hoạt động (1 = OK)",
+      "description": "Blackbox kiểm tra HTTP /health/ mỗi 15 giây. 1 = HTTP thành công, 0 = lỗi.",
+      "datasource": {"type": "prometheus", "uid": "clinic_prometheus"},
+      "targets": [{"expr": "probe_success{job=\"clinic_http\"}", "legendFormat": "{{instance}}", "refId": "A"}],
+      "gridPos": {"h": 7, "w": 16, "x": 0, "y": 0},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [{"type": "value", "options": {"0": {"text": "LỖI", "color": "red"}, "1": {"text": "HOẠT ĐỘNG", "color": "green"}}}],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]}
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "orientation": "auto", "textMode": "value_and_name", "colorMode": "value", "graphMode": "area", "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Prometheus (1 = OK)",
+      "description": "Prometheus tự kiểm tra việc thu thập metrics của chính nó.",
+      "datasource": {"type": "prometheus", "uid": "clinic_prometheus"},
+      "targets": [{"expr": "up{job=\"prometheus\"}", "legendFormat": "Prometheus", "refId": "A"}],
+      "gridPos": {"h": 7, "w": 8, "x": 16, "y": 0},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [{"type": "value", "options": {"0": {"text": "LỖI", "color": "red"}, "1": {"text": "HOẠT ĐỘNG", "color": "green"}}}],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]}
+        },
+        "overrides": []
+      },
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "orientation": "auto", "textMode": "value", "colorMode": "value", "graphMode": "none", "justifyMode": "auto"}
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Thời gian kiểm tra HTTP (giây)",
+      "description": "Đây là thời gian trả lời của health check, không phải thời gian tải tất cả các trang nghiệp vụ.",
+      "datasource": {"type": "prometheus", "uid": "clinic_prometheus"},
+      "targets": [{"expr": "probe_duration_seconds{job=\"clinic_http\"}", "legendFormat": "{{instance}}", "refId": "A"}],
+      "gridPos": {"h": 9, "w": 16, "x": 0, "y": 7},
+      "fieldConfig": {"defaults": {"unit": "s", "color": {"mode": "palette-classic"}, "custom": {"drawStyle": "line", "lineInterpolation": "linear", "lineWidth": 2, "fillOpacity": 10, "showPoints": "auto", "spanNulls": false}}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "none"}}
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Mã HTTP trả về",
+      "description": "200 thường là thành công. Không hiện dữ liệu bệnh nhân hay chuỗi truy vấn tìm kiếm.",
+      "datasource": {"type": "prometheus", "uid": "clinic_prometheus"},
+      "targets": [{"expr": "probe_http_status_code{job=\"clinic_http\"}", "legendFormat": "{{instance}}", "refId": "A"}],
+      "gridPos": {"h": 9, "w": 8, "x": 16, "y": 7},
+      "fieldConfig": {"defaults": {"unit": "none", "color": {"mode": "palette-classic"}, "custom": {"drawStyle": "line", "lineInterpolation": "linear", "lineWidth": 2, "fillOpacity": 0, "showPoints": "auto", "spanNulls": false}}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "none"}}
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["clinic", "health", "docker"],
+  "templating": {"list": []},
+  "time": {"from": "now-1h", "to": "now"},
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Phòng khám — Giám sát hoạt động",
+  "uid": "clinic-overview",
+  "version": 1,
+  "refresh": "15s"
+}

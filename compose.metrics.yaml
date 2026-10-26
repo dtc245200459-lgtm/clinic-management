@@ -1,0 +1,22 @@
+# Bước 6.5 — PostgreSQL metrics. Không sửa PostgreSQL hay migration.
+# Chỉ dùng trên localhost trong môi trường đồ án giả lập.
+services:
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter:v0.20.1
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_URI: "db:5432/${POSTGRES_DB:?Missing_POSTGRES_DB}?sslmode=disable"
+      DATA_SOURCE_USER: ${POSTGRES_USER:?Missing_POSTGRES_USER}
+      DATA_SOURCE_PASS: ${POSTGRES_PASSWORD:?Missing_POSTGRES_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Thêm file cấu hình Prometheus mới, không ghi đè file Bước 6.3.
+  prometheus:
+    command:
+      - --config.file=/etc/prometheus/prometheus-metrics.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=3d
+    volumes:
+      - ./monitoring/prometheus-metrics.yml:/etc/prometheus/prometheus-metrics.yml:ro

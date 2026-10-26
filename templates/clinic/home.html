@@ -1,0 +1,31 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Trang chủ{% endblock %}
+{% block content %}
+  <div class="page-heading">
+    <div><p class="eyebrow">CLINIC MANAGEMENT · DOCKER COMPOSE</p>
+      <h1>Hệ thống quản lý phòng khám</h1>
+      <p class="description">Django + PostgreSQL + Docker Compose · Bước 5: Đăng nhập và phân quyền.</p>
+    </div>
+  </div>
+  <div class="grid">
+    <article class="card"><span class="icon">✓</span><h2>Django</h2><p>Ứng dụng đang phản hồi.</p></article>
+    <article class="card"><span class="icon">{% if db_ready %}✓{% else %}!{% endif %}</span>
+      <h2>PostgreSQL</h2><p>{% if db_ready %}Kết nối cơ sở dữ liệu thành công.{% else %}Cơ sở dữ liệu chưa sẵn sàng.{% endif %}</p></article>
+    <article class="card"><span class="icon">👤</span><h2>Tài khoản</h2>
+      {% if role_admin %}<p>Bạn đang đăng nhập với quyền <strong>Quản trị viên</strong>.</p>
+      {% elif role_doctor %}<p>Bạn đang đăng nhập với quyền <strong>Bác sĩ</strong>.</p>
+      {% elif role_reception %}<p>Bạn đang đăng nhập với quyền <strong>Lễ tân</strong>.</p>
+      {% elif user.is_authenticated %}<p>Tài khoản chưa được phân quyền. Liên hệ quản trị viên.</p>
+      {% else %}<p>Vui lòng đăng nhập để sử dụng hệ thống.</p>{% endif %}
+    </article>
+  </div>
+  <div class="footer-links">
+    {% if role_admin or role_reception %}<a href="{% url 'patient_list' %}">Bệnh nhân</a>{% endif %}
+    {% if role_admin or role_reception or role_doctor %}<a href="{% url 'appointment_list' %}">Lịch hẹn</a>{% endif %}
+    {% if role_admin or role_doctor %}<a href="{% url 'medical_record_list' %}">Hồ sơ khám</a>
+      <a href="{% url 'medicine_list' %}">Danh mục thuốc</a>{% endif %}
+    {% if role_admin %}<a href="{% url 'admin:auth_user_changelist' %}">Quản lý tài khoản</a>{% endif %}
+    {% if not user.is_authenticated %}<a href="{% url 'login' %}">Đăng nhập</a>{% endif %}
+    <a href="{% url 'health' %}">Kiểm tra /health/</a>
+  </div>
+{% endblock %}

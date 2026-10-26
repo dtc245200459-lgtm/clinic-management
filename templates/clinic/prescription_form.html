@@ -1,0 +1,15 @@
+{% extends 'clinic/base.html' %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+  <div class="page-heading"><div><p class="eyebrow">ĐƠN THUỐC · BƯỚC 4</p><h1>{{ page_title }}</h1></div></div>
+  <section class="panel form-panel">
+    <p class="hint">Hồ sơ #{{ record.pk }} · Bệnh nhân: {{ record.appointment.patient.full_name }}. Mỗi hồ sơ chỉ có một đơn thuốc demo. Sau khi lưu, bạn có thể thêm nhiều dòng thuốc.</p>
+    <form method="post">{% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="form-row"><label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}</label>
+        {{ form.notes }}{% for error in form.notes.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>
+      <div class="form-actions"><button type="submit">Lưu đơn thuốc</button>
+        <a class="button-alt" href="{% url 'medical_record_detail' record.pk %}">Quay lại</a></div>
+    </form>
+  </section>
+{% endblock %}

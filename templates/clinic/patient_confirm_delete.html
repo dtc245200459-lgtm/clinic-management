@@ -1,0 +1,14 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Xác nhận xóa{% endblock %}
+{% block content %}
+  <div class="page-heading"><div><p class="eyebrow">XÁC NHẬN THAO TÁC</p><h1>Xóa bệnh nhân</h1></div></div>
+  <section class="panel form-panel">
+    <p>Bạn có chắc muốn xóa bệnh nhân <strong>{{ patient.full_name }}</strong> (mã <strong>{{ patient.patient_code }}</strong>)?</p>
+    <p class="warning">Thao tác này xóa bản ghi khỏi cơ sở dữ liệu demo. Không dùng tính năng xóa trực tiếp cho hồ sơ y tế thật.</p>
+    <form method="post" class="form-actions">
+      {% csrf_token %}
+      <button class="button-danger" type="submit">Xác nhận xóa</button>
+      <a class="button-alt" href="{% url 'patient_list' %}">Hủy</a>
+    </form>
+  </section>
+{% endblock %}

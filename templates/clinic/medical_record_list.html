@@ -1,0 +1,34 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Hồ sơ khám{% endblock %}
+{% block content %}
+  <div class="page-heading">
+    <div><p class="eyebrow">QUẢN LÝ PHÒNG KHÁM · BƯỚC 4</p><h1>Hồ sơ khám</h1>
+      <p class="description">Mỗi lịch hẹn tối đa một hồ sơ khám. Không tạo hồ sơ từ lịch đã hủy.</p></div>
+    <a class="button" href="{% url 'medical_record_create' %}">+ Tạo hồ sơ khám</a>
+  </div>
+  <section class="panel">
+    <form class="search-row" method="get">
+      <label class="sr-only" for="record-search">Tìm hồ sơ</label>
+      <input id="record-search" type="search" name="q" value="{{ query }}" placeholder="Mã/tên bệnh nhân, tên bác sĩ...">
+      <button type="submit">Tìm</button>
+    </form>
+    <div class="table-scroll"><table class="data-table">
+      <thead><tr><th>Mã hồ sơ</th><th>Bệnh nhân</th><th>Bác sĩ</th><th>Thời điểm khám</th><th>Thao tác</th></tr></thead>
+      <tbody>
+        {% for item in page_obj %}
+          <tr><td><strong>HS{{ item.pk|stringformat:'04d' }}</strong></td>
+          <td>{{ item.appointment.patient.patient_code }}<div class="subtle">{{ item.appointment.patient.full_name }}</div></td>
+          <td>{{ item.appointment.doctor.full_name }}</td>
+          <td>{{ item.examined_at|date:'d/m/Y H:i' }}</td>
+          <td class="actions"><a href="{% url 'medical_record_detail' item.pk %}">Xem</a>
+            <a href="{% url 'medical_record_update' item.pk %}">Sửa</a></td></tr>
+        {% empty %}<tr><td colspan="5" class="empty-state">Chưa có hồ sơ khám nào. Cần có một lịch hẹn chưa hủy trước khi tạo hồ sơ.</td></tr>{% endfor %}
+      </tbody>
+    </table></div>
+    {% if page_obj.has_other_pages %}<div class="pagination">
+      {% if page_obj.has_previous %}<a href="?q={{ query|urlencode }}&amp;page={{ page_obj.previous_page_number }}">← Trang trước</a>{% endif %}
+      <span>Trang {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?q={{ query|urlencode }}&amp;page={{ page_obj.next_page_number }}">Trang sau →</a>{% endif %}
+    </div>{% endif %}
+  </section>
+{% endblock %}

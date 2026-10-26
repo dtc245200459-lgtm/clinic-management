@@ -1,0 +1,64 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Lịch hẹn khám{% endblock %}
+{% block content %}
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">QUẢN LÝ PHÒNG KHÁM · BƯỚC 3</p>
+      <h1>Lịch hẹn khám</h1>
+      <p class="description">Đặt lịch, cập nhật trạng thái và kiểm tra trùng giờ bác sĩ.</p>
+    </div>
+    {% if role_admin or role_reception %}<a class="button" href="{% url 'appointment_create' %}">+ Đặt lịch khám</a>{% endif %}
+  </div>
+  <section class="panel">
+    <form class="search-row" method="get">
+      <label class="sr-only" for="appointment-search">Tìm lịch hẹn</label>
+      <input id="appointment-search" type="search" name="q" value="{{ query }}" placeholder="Mã/tên bệnh nhân hoặc tên bác sĩ...">
+      <select name="status" aria-label="Lọc trạng thái lịch hẹn">
+        <option value="">Tất cả trạng thái</option>
+        {% for value,label in status_choices %}
+        <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Lọc</button>
+      {% if query or status %}<a class="button-alt" href="{% url 'appointment_list' %}">Xóa lọc</a>{% endif %}
+    </form>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Bệnh nhân</th><th>Bác sĩ</th><th>Ngày giờ</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+        <tbody>
+          {% for item in page_obj %}
+          <tr>
+            <td><strong>{{ item.patient.patient_code }}</strong><div class="subtle">{{ item.patient.full_name }}</div></td>
+            <td>{{ item.doctor.full_name }}<div class="subtle">{{ item.doctor.specialty }}</div></td>
+            <td>{{ item.scheduled_at|date:'d/m/Y H:i' }}</td>
+            <td>
+              {% if item.status == 'scheduled' %}<span class="status-pill status-pending">Chờ khám</span>
+              {% elif item.status == 'completed' %}<span class="status-pill status-ok">Đã khám</span>
+              {% else %}<span class="status-pill status-muted">Đã hủy</span>{% endif %}
+            </td>
+            <td class="actions">
+              {% if item.medical_record and role_admin or item.medical_record and role_doctor %}
+                <a href="{% url 'medical_record_detail' item.medical_record.pk %}">Hồ sơ khám</a>
+              {% elif role_admin or role_reception %}
+                <a href="{% url 'appointment_update' item.pk %}">Sửa</a>
+              {% endif %}
+              {% if item.status == 'scheduled' and role_reception or item.status == 'scheduled' and role_admin %}
+                <a class="danger-link" href="{% url 'appointment_cancel' item.pk %}">Hủy lịch</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="empty-state">Chưa có lịch hẹn phù hợp. Hãy tạo bác sĩ và bệnh nhân trước khi đặt lịch.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if page_obj.has_other_pages %}
+      <div class="pagination">
+        {% if page_obj.has_previous %}<a href="?q={{ query|urlencode }}&amp;status={{ status|urlencode }}&amp;page={{ page_obj.previous_page_number }}">← Trang trước</a>{% endif %}
+        <span>Trang {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?q={{ query|urlencode }}&amp;status={{ status|urlencode }}&amp;page={{ page_obj.next_page_number }}">Trang sau →</a>{% endif %}
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

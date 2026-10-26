@@ -1,0 +1,18 @@
+// Chỉ theo dõi file Nginx đã lược bỏ IP, URL và query string.
+// Không truy cập /var/run/docker.sock, không thu thập log DB hoặc bệnh án.
+local.file_match "clinic_http" {
+  path_targets = [{"__path__" = "/var/log/clinic/clinic_access.log", "job" = "clinic_http_log", "service" = "nginx"}]
+  sync_period  = "5s"
+}
+
+loki.source.file "clinic_http" {
+  targets       = local.file_match.clinic_http.targets
+  forward_to    = [loki.write.local.receiver]
+  tail_from_end = true
+}
+
+loki.write "local" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

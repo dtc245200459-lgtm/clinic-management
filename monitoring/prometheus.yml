@@ -1,0 +1,26 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  # HTTP health check: đo tính sẵn sàng và thời gian trả lời, không thu thập bệnh án.
+  - job_name: clinic_http
+    metrics_path: /probe
+    scrape_timeout: 10s
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://web:8000/health/
+          - http://nginx:80/health/
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox:9115

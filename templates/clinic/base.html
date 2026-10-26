@@ -1,0 +1,40 @@
+{% load static %}
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Quản lý phòng khám{% endblock %} | Phòng khám</title>
+    <link rel="stylesheet" href="{% static 'clinic/styles.css' %}">
+  </head>
+  <body>
+    <header class="site-nav">
+      <div class="nav-inner">
+        <a class="brand" href="{% url 'home' %}">✚ Phòng khám</a>
+        <nav aria-label="Điều hướng chính">
+          <a href="{% url 'home' %}">Trang chủ</a>
+          {% if role_admin or role_reception %}<a href="{% url 'patient_list' %}">Bệnh nhân</a>{% endif %}
+          {% if role_admin or role_reception or role_doctor %}<a href="{% url 'doctor_list' %}">Bác sĩ</a>
+            <a href="{% url 'appointment_list' %}">Lịch khám</a>{% endif %}
+          {% if role_admin or role_doctor %}<a href="{% url 'medical_record_list' %}">Hồ sơ khám</a>
+            <a href="{% url 'medicine_list' %}">Thuốc</a>{% endif %}
+          {% if role_admin %}<a href="{% url 'admin:index' %}">Quản trị</a>{% endif %}
+          {% if user.is_authenticated %}
+            <span class="signed-in">{{ user.username }}</span>
+            <form method="post" action="{% url 'logout' %}" class="logout-form">{% csrf_token %}
+              <button type="submit" class="logout-button">Đăng xuất</button></form>
+          {% else %}<a href="{% url 'login' %}">Đăng nhập</a>{% endif %}
+        </nav>
+      </div>
+    </header>
+    <main class="app-page">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash" role="status">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}{% endblock %}
+      <p class="notice">Dự án thực hành: chỉ nhập dữ liệu bệnh nhân giả lập, không sử dụng hồ sơ thật.</p>
+    </main>
+  </body>
+</html>

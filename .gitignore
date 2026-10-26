@@ -1,0 +1,21 @@
+.env
+__pycache__/
+*.py[cod]
+.venv/
+staticfiles/
+.pytest_cache/
+.DS_Store
+*.sqlite3
+# PostgreSQL credentials
+.env
+.env.*
+!.env.example
+
+# HTTPS certificates
+nginx/certs/
+
+# Backup files
+backup-code*.zip
+compose-backup.txt
+backups/
+*.dump

@@ -1,0 +1,14 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Xác nhận hủy lịch{% endblock %}
+{% block content %}
+  <div class="page-heading"><div><p class="eyebrow">XÁC NHẬN THAO TÁC</p><h1>Hủy lịch hẹn</h1></div></div>
+  <section class="panel form-panel">
+    <p>Bạn có chắc muốn hủy lịch của <strong>{{ appointment.patient.full_name }}</strong> với bác sĩ <strong>{{ appointment.doctor.full_name }}</strong> vào <strong>{{ appointment.scheduled_at|date:'d/m/Y H:i' }}</strong>?</p>
+    <p class="warning">Lịch sẽ chuyển sang trạng thái “Đã hủy” nhưng vẫn được lưu trong cơ sở dữ liệu.</p>
+    <form method="post" class="form-actions">
+      {% csrf_token %}
+      <button class="button-danger" type="submit">Xác nhận hủy lịch</button>
+      <a class="button-alt" href="{% url 'appointment_list' %}">Quay lại</a>
+    </form>
+  </section>
+{% endblock %}

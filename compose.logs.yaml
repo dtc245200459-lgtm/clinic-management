@@ -1,0 +1,37 @@
+# Bước 6.4: theo dõi nhật ký HTTP tối giản, không đụng đến PostgreSQL.
+# Không gắn Docker socket vào Alloy; Alloy chỉ đọc file log đã loại bỏ dữ liệu nhạy cảm.
+services:
+  nginx:
+    volumes:
+      - ./nginx/clinic_logging.conf:/etc/nginx/conf.d/clinic_logging.conf:ro
+      - clinic_http_logs:/var/log/clinic
+
+  loki:
+    image: grafana/loki:3.7.0
+    restart: unless-stopped
+    command:
+      - -config.file=/etc/loki/config.yaml
+    ports:
+      - "127.0.0.1:3101:3100"
+    volumes:
+      - ./monitoring/loki/config.yaml:/etc/loki/config.yaml:ro
+      - loki_data:/loki
+
+  alloy:
+    image: grafana/alloy:v1.19.0
+    restart: unless-stopped
+    command:
+      - run
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    volumes:
+      - ./monitoring/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - clinic_http_logs:/var/log/clinic:ro
+      - alloy_data:/var/lib/alloy/data
+    depends_on:
+      - loki
+
+volumes:
+  clinic_http_logs:
+  loki_data:
+  alloy_data:

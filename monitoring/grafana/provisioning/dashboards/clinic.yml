@@ -1,0 +1,11 @@
+apiVersion: 1
+providers:
+  - name: Clinic Monitoring
+    orgId: 1
+    folder: Clinic Monitoring
+    type: file
+    disableDeletion: true
+    editable: false
+    updateIntervalSeconds: 30
+    options:
+      path: /var/lib/grafana/dashboards

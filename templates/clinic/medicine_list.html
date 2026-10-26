@@ -1,0 +1,32 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Danh mục thuốc{% endblock %}
+{% block content %}
+  <div class="page-heading">
+    <div><p class="eyebrow">QUẢN LÝ PHÒNG KHÁM · BƯỚC 4</p><h1>Danh mục thuốc</h1>
+      <p class="description">Danh mục mẫu do người dùng nhập, không phải chỉ dẫn kê đơn.</p></div>
+    {% if role_admin %}<a class="button" href="{% url 'medicine_create' %}">+ Thêm thuốc</a>{% endif %}
+  </div>
+  <section class="panel">
+    <form class="search-row" method="get"><label class="sr-only" for="medicine-search">Tìm thuốc</label>
+      <input id="medicine-search" name="q" type="search" value="{{ query }}" placeholder="Tên hoặc đơn vị thuốc...">
+      <button type="submit">Tìm</button>
+    </form>
+    <div class="table-scroll"><table class="data-table">
+      <thead><tr><th>Tên thuốc</th><th>Đơn vị</th><th>Mô tả</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+      <tbody>
+        {% for item in page_obj %}<tr>
+          <td><strong>{{ item.name }}</strong></td><td>{{ item.unit }}</td>
+          <td>{{ item.description|default:'—'|truncatechars:70 }}</td>
+          <td>{% if item.is_active %}<span class="status-pill status-ok">Đang dùng</span>
+            {% else %}<span class="status-pill status-muted">Ngừng dùng</span>{% endif %}</td>
+          <td class="actions">{% if role_admin %}<a href="{% url 'medicine_update' item.pk %}">Sửa</a>{% else %}—{% endif %}</td>
+        </tr>{% empty %}<tr><td colspan="5" class="empty-state">Chưa có thuốc nào trong danh mục demo.</td></tr>{% endfor %}
+      </tbody>
+    </table></div>
+    {% if page_obj.has_other_pages %}<div class="pagination">
+      {% if page_obj.has_previous %}<a href="?q={{ query|urlencode }}&amp;page={{ page_obj.previous_page_number }}">← Trang trước</a>{% endif %}
+      <span>Trang {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?q={{ query|urlencode }}&amp;page={{ page_obj.next_page_number }}">Trang sau →</a>{% endif %}
+    </div>{% endif %}
+  </section>
+{% endblock %}

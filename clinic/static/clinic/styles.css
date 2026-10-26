@@ -1,0 +1,88 @@
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; color: #15314b; background: #f3f7fb; }
+.container { width: min(1020px, calc(100% - 36px)); margin: 8vh auto; }
+.eyebrow { color: #1a7c95; font-size: 12px; font-weight: 800; letter-spacing: 1.6px; }
+h1 { margin: 12px 0; font-size: clamp(32px, 5vw, 52px); line-height: 1.14; }
+.description { color: #577086; max-width: 650px; font-size: 18px; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; margin: 40px 0 26px; }
+.card { background: #fff; padding: 25px; border: 1px solid #dce7ee; border-radius: 18px; box-shadow: 0 10px 35px #16416a0b; }
+.icon { display: inline-grid; place-items: center; width: 35px; height: 35px; background: #dbf6ec; border-radius: 50%; color: #137b54; font-size: 24px; font-weight: bold; }
+.card h2 { margin: 20px 0 7px; font-size: 20px; }
+.card p { margin: 0; color: #577086; line-height: 1.6; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 12px; }
+a { padding: 12px 16px; border-radius: 10px; background: #087f9a; color: white; text-decoration: none; font-weight: 600; }
+a + a { background: #e0edf5; color: #12546c; }
+.notice { margin-top: 30px; color: #7e6c30; font-size: 14px; }
+@media (max-width: 740px) { .grid { grid-template-columns: 1fr; } .container { margin-top: 5vh; } }
+
+/* Buoc 2: giao dien quan ly benh nhan */
+.site-nav { background: #fff; border-bottom: 1px solid #dce7ee; }
+.nav-inner { width: min(1080px, calc(100% - 36px)); margin: auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 70px; }
+.site-nav a { background: transparent; color: #17425b; padding: 10px 8px; }
+.site-nav .brand { font-weight: 800; color: #087f9a; font-size: 20px; }
+.site-nav nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.app-page { width: min(1080px, calc(100% - 36px)); margin: 48px auto 60px; }
+.page-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 25px; }
+.page-heading h1 { font-size: clamp(28px, 4vw, 40px); }
+.page-heading .description { margin-bottom: 0; }
+.panel { background: #fff; border: 1px solid #dce7ee; border-radius: 18px; padding: 24px; box-shadow: 0 10px 35px #16416a0b; }
+.button, .button-alt, button { display: inline-flex; align-items: center; justify-content: center; border: 0; cursor: pointer; text-decoration: none; border-radius: 10px; padding: 12px 17px; font: inherit; font-weight: 700; }
+.button, button { background: #087f9a; color: white; }
+.button-alt { background: #e0edf5; color: #12546c; }
+.button-danger { background: #b83242; color: white; }
+.search-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 23px; }
+.search-row input { flex: 1 1 260px; }
+input, textarea, select { max-width: 100%; width: 100%; border: 1px solid #c8d8e5; border-radius: 9px; padding: 12px 13px; font: inherit; color: #15314b; background: white; }
+input:focus, textarea:focus, select:focus { outline: 2px solid #85d5e5; border-color: #087f9a; }
+.table-scroll { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; min-width: 690px; }
+.data-table th { background: #edf5fa; color: #48667b; font-size: 13px; text-align: left; }
+.data-table th, .data-table td { padding: 14px 12px; border-bottom: 1px solid #e8eef2; }
+.data-table tr:last-child td { border-bottom: 0; }
+.actions { white-space: nowrap; }
+.actions a { display: inline; background: transparent; padding: 0 8px 0 0; color: #087f9a; }
+.actions .danger-link { color: #b83242; }
+.empty-state { color: #718497; text-align: center; padding: 35px 12px !important; }
+.pagination { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 20px; }
+.pagination a { background: #e0edf5; color: #12546c; }
+.form-panel { max-width: 780px; }
+.form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+.form-row { display: flex; flex-direction: column; gap: 7px; }
+.form-row label { font-weight: 700; }
+.form-wide { grid-column: 1 / -1; }
+.required, .field-error { color: #b83242; }
+.field-error { font-size: 13px; }
+.form-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.flash { padding: 13px 16px; margin-bottom: 20px; background: #dbf6ec; border: 1px solid #b5e8d1; border-radius: 10px; color: #155f45; }
+.warning { color: #986023; background: #fff5df; border-radius: 9px; padding: 13px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+@media (max-width: 680px) { .page-heading { align-items: start; flex-direction: column; } .form-grid { grid-template-columns: 1fr; } .nav-inner { align-items: start; flex-direction: column; padding: 12px 0; } }
+
+/* Buoc 3: bac si va lich kham */
+.checkbox-row { display: flex; flex-direction: row; align-items: center; gap: 10px; }
+.checkbox-row input[type="checkbox"] { width: auto; height: 18px; width: 18px; }
+.search-row select { width: auto; flex: 0 1 190px; }
+.status-pill { display: inline-block; border-radius: 999px; padding: 6px 10px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.status-ok { background: #dbf6ec; color: #137b54; }
+.status-pending { background: #fff2d8; color: #8a5b13; }
+.status-muted { background: #ecf0f3; color: #65788a; }
+.subtle { font-size: 13px; color: #6d8393; margin-top: 4px; }
+.hint { background: #eaf6fa; color: #355e70; padding: 12px 14px; border-radius: 9px; margin: 0 0 25px; }
+.error-block { background: #ffecee; border: 1px solid #f1b9c0; padding: 12px; border-radius: 9px; color: #9f2736; margin-bottom: 18px; }
+
+/* Buoc 4: ho so kham va don thuoc */
+.detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; margin: 0; }
+.detail-grid > div { border-bottom: 1px solid #e8eef2; padding-bottom: 15px; }
+.detail-grid dt { color: #627b8e; font-size: 13px; font-weight: 700; margin-bottom: 7px; }
+.detail-grid dd { margin: 0; overflow-wrap: anywhere; line-height: 1.6; }
+.detail-wide { grid-column: 1 / -1; }
+.inline-link { color: #087f9a; background: transparent; padding: 0 8px; }
+
+/* Buoc 5: dang nhap va phan quyen */
+.signed-in { padding: 10px 2px; color: #426477; font-size: 13px; font-weight: 700; }
+.logout-form { display: inline-flex; margin: 0; }
+.site-nav .logout-button { padding: 10px 12px; background: #e8f0f5; color: #17425b; font-size: 13px; }
+.login-panel { max-width: 460px; }
+.login-password { margin-top: 18px; }
+@media (max-width: 680px) { .detail-grid { grid-template-columns: 1fr; } }

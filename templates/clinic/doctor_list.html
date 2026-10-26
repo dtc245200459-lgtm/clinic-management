@@ -1,0 +1,49 @@
+{% extends 'clinic/base.html' %}
+{% block title %}Danh sách bác sĩ{% endblock %}
+{% block content %}
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">QUẢN LÝ PHÒNG KHÁM · BƯỚC 3</p>
+      <h1>Danh sách bác sĩ</h1>
+      <p class="description">Quản lý chuyên khoa và trạng thái làm việc của bác sĩ.</p>
+    </div>
+    {% if role_admin %}<a class="button" href="{% url 'doctor_create' %}">+ Thêm bác sĩ</a>{% endif %}
+  </div>
+  <section class="panel">
+    <form class="search-row" method="get">
+      <label class="sr-only" for="doctor-search">Tìm bác sĩ</label>
+      <input id="doctor-search" type="search" name="q" value="{{ query }}" placeholder="Tìm theo mã, tên hoặc chuyên khoa...">
+      <button type="submit">Tìm kiếm</button>
+      {% if query %}<a class="button-alt" href="{% url 'doctor_list' %}">Xóa lọc</a>{% endif %}
+    </form>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Mã BS</th><th>Họ và tên</th><th>Chuyên khoa</th><th>Điện thoại</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+        <tbody>
+          {% for doctor in page_obj %}
+          <tr>
+            <td><strong>{{ doctor.doctor_code }}</strong></td>
+            <td>{{ doctor.full_name }}</td>
+            <td>{{ doctor.specialty }}</td>
+            <td>{{ doctor.phone|default:'—' }}</td>
+            <td>
+              {% if doctor.is_active %}<span class="status-pill status-ok">Đang làm việc</span>
+              {% else %}<span class="status-pill status-muted">Đã ngừng</span>{% endif %}
+            </td>
+            <td class="actions">{% if role_admin %}<a href="{% url 'doctor_update' doctor.pk %}">Sửa</a>{% else %}—{% endif %}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="empty-state">Chưa có bác sĩ. Hãy tạo một bác sĩ giả lập.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if page_obj.has_other_pages %}
+      <div class="pagination">
+        {% if page_obj.has_previous %}<a href="?q={{ query|urlencode }}&amp;page={{ page_obj.previous_page_number }}">← Trang trước</a>{% endif %}
+        <span>Trang {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?q={{ query|urlencode }}&amp;page={{ page_obj.next_page_number }}">Trang sau →</a>{% endif %}
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}
